@@ -7,20 +7,25 @@ import os
 import datetime
 import shutil
 import hashlib
-BUFFER_SIZE = 65536 
+BUFFER_SIZE: int = 65536
 
+# Exit if the number of arguments is invalid
 if len(sys.argv) != 2:
   print ("\nUsage: backup.py <dirname>\n")
   exit()
 
+# Get the argument for the folder to zip
 dir_name: str = sys.argv[1]
 
-# check if dir_name is a directory
+# Exit if dir_name is not a directory
 if not os.path.isdir(dir_name):
   print ("The provided argument is not a directory")
   exit()
 
-output_filename: str = f"aec_uploads_{ datetime.datetime.now(tz=datetime.timezone.utc).strftime('%Y-%m-%d_%H:%M:%SUTC') }" 
+# zip the folder to a file
+now = datetime.datetime.now(tz=datetime.timezone.utc)
+timestamp: str = now.strftime('%Y-%m-%d_%H:%M:%SUTC')
+output_filename: str = f"aec_uploads_{ timestamp }" 
 shutil.make_archive(output_filename, 'zip', dir_name)
 
 # calculate checksum and include in the filename so that 
