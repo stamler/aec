@@ -51,3 +51,5 @@ print (f"Created {final_name}")
 
 
 # TODO: delete older backups beyond a certain number
+# 1. Get all aec_uploads_*.tar.gz files using glob into list
+# 2. Sort list, get items after index X and iterate over them to delete
