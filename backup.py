@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Zip a folder
-# requires python > 3.6 for types
+# requires python >= 3.6 for type annotations
 import sys
 import os
 import datetime
@@ -22,23 +22,31 @@ if not os.path.isdir(dir_name):
   print ("The provided argument is not a directory")
   exit()
 
+# get the absolute path of the input folder
+source = os.path.abspath(dir_name)
+
+# Go up one level
+root_dir = os.path.abspath(os.path.join(source,".."))
+base_dir = os.path.relpath(source, root_dir)
+
 # zip the folder to a file
-now = datetime.datetime.now(tz=datetime.timezone.utc)
+now: datetime.datetime = datetime.datetime.now(tz=datetime.timezone.utc)
 timestamp: str = now.strftime('%Y-%m-%d_%H:%M:%SUTC')
-output_filename: str = f"aec_uploads_{ timestamp }" 
-shutil.make_archive(output_filename, 'zip', dir_name)
+output_filename: str = f"aec_uploads_{ timestamp }"
+print("creating archive...")
+shutil.make_archive(output_filename, 'gztar', root_dir, base_dir)
 
 # calculate checksum and include in the filename so that 
 # the integrity of transfers can be verified easily
 m = hashlib.sha256()
-with open(f"{output_filename}.zip", 'rb') as f:
+with open(f"{output_filename}.tar.gz", "rb") as f:
     while True:
         data = f.read(BUFFER_SIZE)
         if not data:
             break
         m.update(data)
-final_name = f"{output_filename}_{m.hexdigest()}.zip"
-os.rename(f"{output_filename}.zip", final_name)
+final_name = f"{output_filename}_{m.hexdigest()}.tar.gz"
+os.rename(f"{output_filename}.tar.gz", final_name)
 print (f"Created {final_name}")
 
 
