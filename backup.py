@@ -16,4 +16,4 @@ if len(sys.argv) == 2:
   else:
     print ("The provided argument is not a directory")
 else:
-  print ("\nUsage:  python backup.py <dirname>\n")
+  print ("\nUsage: backup.py <dirname>\n")
