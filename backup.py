@@ -6,6 +6,8 @@ import sys
 import os
 import datetime
 import shutil
+import hashlib
+BUFFER_SIZE = 65536 
 
 if len(sys.argv) != 2:
   print ("\nUsage: backup.py <dirname>\n")
@@ -20,6 +22,19 @@ if not os.path.isdir(dir_name):
 
 output_filename: str = f"aec_uploads_{ datetime.datetime.now(tz=datetime.timezone.utc).strftime('%Y-%m-%d_%H:%M:%SUTC') }" 
 shutil.make_archive(output_filename, 'zip', dir_name)
-# TODO: calculate checksum and include it in the filename
+
+# calculate checksum and include in the filename so that 
+# the integrity of transfers can be verified easily
+m = hashlib.sha256()
+with open(f"{output_filename}.zip", 'rb') as f:
+    while True:
+        data = f.read(BUFFER_SIZE)
+        if not data:
+            break
+        m.update(data)
+final_name = f"{output_filename}_{m.hexdigest()}.zip"
+os.rename(f"{output_filename}.zip", final_name)
+print (f"Created {final_name}")
+
+
 # TODO: delete older backups beyond a certain number
-print (f"Created {output_filename}")
