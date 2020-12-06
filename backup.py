@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Zip a folder 
 import sys
 import os
