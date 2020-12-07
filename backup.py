@@ -42,11 +42,11 @@ shutil.make_archive(output_filename, 'gztar', root_dir, base_dir)
 # the integrity of transfers can be verified easily
 m = hashlib.sha256()
 with open(f"{output_filename}.tar.gz", "rb") as f:
-    while True:
-        data = f.read(BUFFER_SIZE)
-        if not data:
-            break
-        m.update(data)
+  while True:
+    data = f.read(BUFFER_SIZE)
+    if not data:
+      break
+    m.update(data)
 final_name = f"{output_filename}_{m.hexdigest()}.tar.gz"
 os.rename(f"{output_filename}.tar.gz", final_name)
 print (f"Created {final_name}")
