@@ -7,6 +7,8 @@ import os
 import datetime
 import shutil
 import hashlib
+import glob
+from typing import List
 BUFFER_SIZE: int = 65536
 
 # Exit if the number of arguments is invalid
@@ -49,7 +51,8 @@ final_name = f"{output_filename}_{m.hexdigest()}.tar.gz"
 os.rename(f"{output_filename}.tar.gz", final_name)
 print (f"Created {final_name}")
 
-
-# TODO: delete older backups beyond a certain number
-# 1. Get all aec_uploads_*.tar.gz files using glob into list
-# 2. Sort list, get items after index X and iterate over them to delete
+# keep only the 3 newest archives
+archives: List[str] = glob.glob("./aec_uploads_*.tar.gz")
+archives.sort() # ascending by date, otherwise reverse=True
+for x in archives[:-3]:
+  os.remove(x)
